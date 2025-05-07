@@ -23,15 +23,6 @@ With recent regulations requiring hospitals to publish service pricing, this pro
 - **Excel** – Supporting analysis and tabular summaries
 
 ---
-
-## My Contributions
-
-- Cleaned and preprocessed pricing datasets using Python
-- Conducted exploratory data analysis (EDA) to uncover trends
-- Built a Tableau dashboard highlighting price differences across U.S. states
-- Summarized findings and wrote insights into a report format
-
----
 ## Acknowledgments
 
 Special thanks to [Tarun Raghu](https://github.com/tarunraghu) for his collaborative spirit and valuable teamwork throughout this project. His shared effort played a key role in shaping the foundation of this work.
