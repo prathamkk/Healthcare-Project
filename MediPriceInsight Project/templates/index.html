@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPriceInsight - Data Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #6a1b9a;
+            --secondary-purple: #9c27b0;
+            --light-purple: #ba68c8;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --type1-color: #7952b3;
+            --type2-color: #198754;
+            --type3-color: #0d6efd;
+            --data-dump-color: #9b59b6;
+            --price-transparency-color: #e67e22;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-purple) 0%, var(--primary-purple) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            color: var(--primary-purple);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--secondary-purple);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .tree-item {
+            margin: 10px 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tree-header {
+            padding: 15px 20px;
+            background-color: var(--primary-purple);
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tree-header:hover {
+            background-color: var(--secondary-purple);
+        }
+
+        .tree-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tree-content.active {
+            max-height: 500px;
+        }
+
+        .tree-option {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary-purple);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .tree-option:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-left-color: var(--primary-purple);
+        }
+
+        .tree-option i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .tree-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .tree-arrow.active {
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .tree-header {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>MediPriceInsight Data Tool</h1>
+                <p>Select an option to proceed</p>
+            </div>
+            
+            <div class="tree-structure">
+                <div class="tree-item">
+                    <div class="tree-header" onclick="toggleTree('ingest')">
+                        <span><i class="fas fa-upload"></i> Ingest Data</span>
+                        <i class="fas fa-chevron-right tree-arrow"></i>
+                    </div>
+                    <div class="tree-content" id="ingestContent">
+                        <a href="{{ url_for('type1') }}" class="tree-option">
+                            <i class="fas fa-file-csv"></i> Type 1 CSV Direct Ingestion
+                        </a>
+                        <a href="{{ url_for('type2') }}" class="tree-option">
+                            <i class="fas fa-table"></i> Type 2 CSV Pivot Ingestion
+                        </a>
+                        <a href="{{ url_for('type3') }}" class="tree-option">
+                            <i class="fas fa-file-code"></i> Type 3 JSON Direct Ingestion
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-header" onclick="toggleTree('dump')">
+                        <span><i class="fas fa-database"></i> Take Data Dump</span>
+                        <i class="fas fa-chevron-right tree-arrow"></i>
+                    </div>
+                    <div class="tree-content" id="dumpContent">
+                        <a href="{{ url_for('data_dump') }}" class="tree-option">
+                            <i class="fas fa-database"></i> Request Data Dump
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-header" onclick="toggleTree('report')">
+                        <span><i class="fas fa-chart-line"></i> View Reports</span>
+                        <i class="fas fa-chevron-right tree-arrow"></i>
+                    </div>
+                    <div class="tree-content" id="reportContent">
+                        <a href="{{ url_for('price_transparency') }}" class="tree-option">
+                            <i class="fas fa-chart-line"></i> Price Transparency Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <p>&copy; 2024 MediPriceInsight. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleTree(id) {
+            const content = document.getElementById(id + 'Content');
+            const arrow = content.previousElementSibling.querySelector('.tree-arrow');
+            
+            // Toggle active class for content
+            content.classList.toggle('active');
+            // Toggle active class for arrow
+            arrow.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
